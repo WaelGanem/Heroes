@@ -13,7 +13,9 @@ services:
       - db
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest 
-
+    environment:
+      - SA_PASSWORD="yourStrong(!)Password"
+      - ACCEPT_EULA="Y"
     volumes: 
       - mssql-data:/var/opt/mssql/data 
 
