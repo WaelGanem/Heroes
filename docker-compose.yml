@@ -1,0 +1,21 @@
+version: '3.8' # Or a suitable version 
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80" 
+  backend:
+    build: ./backend
+    ports:
+      - "5000:80" # Change 5000 if your backend uses a different port
+    depends_on:
+      - db
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest 
+
+    volumes: 
+      - mssql-data:/var/opt/mssql/data 
+
+volumes:
+  mssql-data: 

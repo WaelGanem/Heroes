@@ -1,0 +1,6 @@
+@HEROESAPI_HostAddress = http://localhost:5270
+
+GET {{HEROESAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
