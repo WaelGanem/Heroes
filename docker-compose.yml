@@ -1,23 +1,26 @@
-version: '3.8' # Or a suitable version 
+version: '3.8'
 
 services:
   frontend:
-    build: ./frontend
+    build: ./UI
     ports:
       - "8080:80" 
   backend:
-    build: ./backend
+    build: ./API
     ports:
-      - "5000:80" # Change 5000 if your backend uses a different port
+      - "5000:5270" # Change 5000 if your backend uses a different port
     depends_on:
       - db
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest 
-    environment:
-      - SA_PASSWORD="yourStrong(!)Password"
-      - ACCEPT_EULA="Y"
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    ports:
+      - "1433:1433" # Map to a different host port if needed.
     volumes: 
       - mssql-data:/var/opt/mssql/data 
+    environment: # Place environment variables under the 'db' service
+      - SA_PASSWORD=${SA_PASSWORD} 
+      - ACCEPT_EULA=Y 
 
 volumes:
   mssql-data: 

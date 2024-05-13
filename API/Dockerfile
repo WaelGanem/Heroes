@@ -1,18 +1,15 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+WORKDIR /App
 
-# Copy and restore the csproj first to enable efficient caching of packages
-COPY *.csproj .
+# Copy everything
+COPY . ./
+# Restore as distinct layers
 RUN dotnet restore
-
-# Copy everything else
-COPY . .
-
-# Build and publish the release version
-RUN dotnet publish -c Release -o publish 
+# Build and publish a release
+RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/runtime:6.0
-WORKDIR /app
-COPY --from=base ./HEROESAPI/bin/Release/net8.0 .
-ENTRYPOINT ["dotnet", "HEROESAPI.dll"] 
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /App
+COPY --from=build-env /App/out .
+ENTRYPOINT ["dotnet", "HEROESAPI.dll"]
